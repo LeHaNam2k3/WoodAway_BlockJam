@@ -1,0 +1,254 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8da4c63ef678a854a9c947cddebd867d, type: 3}
+  m_Name: DailyRewardConfig
+  m_EditorClassIdentifier: 
+  listDailyRewardData:
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 50
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 100
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 200
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 300
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 400
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 500
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 50
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 100
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 200
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 300
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 400
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 500
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 50
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 100
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 200
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 300
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 400
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 500
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 50
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 100
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 200
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 300
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 400
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 500
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  listDailyRewardDataLoop:
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  - dailyRewardType: 0
+    icon: {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    skinID: 
+    value: 1000
+  enableSetData: 0
+  totalData: 28
+  listCoinValue: 3200000064000000c80000002c01000090010000f4010000e8030000
+  enableSetDataLoop: 0
+  totalDataLoop: 28
+  coinLoopValue: 1000
+  listIconCoin:
+  - {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+  - {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+  - {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+  - {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+  - {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+  - {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+  - {fileID: 21300042, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
