@@ -7,6 +7,7 @@ public class Block : MonoBehaviour
     [SerializeField] private GameObject buttonCloseBlock;
     [SerializeField] private float timeDelayShowButtonClose;
 
+    
     private void OnEnable()
     {
         buttonCloseBlock.SetActive(false);
