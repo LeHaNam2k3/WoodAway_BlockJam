@@ -1,10 +1,14 @@
+using System;
 using UnityEngine;
+using VirtueSky.Events;
 
 public abstract class BaseBlockPuzzle : MonoBehaviour
 {
+    [SerializeField] private Vector3Event onPositionBlockStopMoveEvent;
+    [SerializeField] private Vector3Event onStopMoveBlockEvent;
+    [SerializeField] private Vector3Event onCheckBlockCollisionGate;
+    [SerializeField] private BlockDirection blockDirection;
     [SerializeField] private ColorType colorType;
-    [SerializeField] private int columnLength;
-    [SerializeField] private int rowLength;
     [SerializeField] private float speedMove = 35f;
     [SerializeField] private Rigidbody rigidbody;
     [SerializeField] private BlockState blockState;
@@ -15,15 +19,18 @@ public abstract class BaseBlockPuzzle : MonoBehaviour
     private Vector3 _direction;
     private Vector3 _offsetMovement;
     private Vector3 _offsetPosEndMove;
-    private Vector3 _offsetRaycast;
-    private Vector3 _raycastPosCheckMovement;
+    private Vector3 _offPivot;
+    private Vector3 pivot;
 
     private void Start()
     {
-        _raycastPosCheckMovement = new Vector3(meshCollider.bounds.min.x + gridMesh.bounds.size.x / 2,
-            meshCollider.bounds.max.y - gridMesh.bounds.size.y / 2, transform.position.z);
-        _offsetRaycast = transform.position - _raycastPosCheckMovement;
+        pivot = new Vector3(meshCollider.bounds.min.x+gridMesh.bounds.size.x/2,
+            meshCollider.bounds.min.y+gridMesh.bounds.size.y/2, transform.position.z);
+        Debug.Log(pivot);
+        _offPivot = transform.position - pivot;
     }
+
+    public Vector3 GetPivotBlock() => transform.position - _offPivot;
 
     private void FixedUpdate()
     {
@@ -48,24 +55,44 @@ public abstract class BaseBlockPuzzle : MonoBehaviour
                 rigidbody.velocity = moveDirection.normalized * speedMove;
             }
 
-            var rayPos = transform.position + _offsetRaycast;
+            var rayPos = transform.position + _offPivot;
             Debug.DrawRay(rayPos, new Vector3(rayPos.x, rayPos.y, rayPos.z + 100), Color.yellow);
         }
     }
 
+    public ColorType GetColorType() => colorType;
+
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("GridSlot"))
+        if (other.gameObject.CompareTag("Gate"))
         {
-            var slot = other.gameObject.GetComponent<GridSlot>();
-            // if (slot.IsCorrectGate(colorType))
-            //     onCollisionGateEvent.Raise(new Tuple<BaseBlockPuzzle, int, int>(this, rowLength, columnLength));
+            var gate = other.gameObject.GetComponent<Gate>();
+            if (gate.IsCorrectGate(colorType))
+            {
+                switch (gate.GetGateInformation().gateDirection)
+                {
+                    case Direction.Left:
+                        break;
+                    case Direction.Right:
+                        break;
+                    case Direction.Bottom:
+                        break;
+                    case Direction.Top:
+                        break;
+                }
+            }
         }
+    }
+
+    void OnShootRaycastCheckGate(Vector3 origin, Vector3 direction)
+    {
+        
     }
 
     public void OnStartMove(Vector3 startInputPos)
     {
         _offsetMovement = startInputPos - transform.position;
+        onPositionBlockStopMoveEvent.OnRaised += OnPositionStopMove;
     }
 
     public void OnStopMove()
@@ -73,28 +100,19 @@ public abstract class BaseBlockPuzzle : MonoBehaviour
         if (blockState != BlockState.Stop) blockState = BlockState.Stop;
         Debug.Log("dung");
         rigidbody.velocity = Vector3.zero;
-        ShootRaycastCheckGridEndMove();
-        transform.position += _offsetPosEndMove;
+        onStopMoveBlockEvent.Raise(transform.position-_offPivot);
+    }
+
+    void OnPositionStopMove(Vector3 currentSlotPos)
+    {
+        var offset =new Vector3(currentSlotPos.x,currentSlotPos.y,transform.position.z)- (transform.position - _offPivot);
+        transform.position += offset;
+        onPositionBlockStopMoveEvent.OnRaised -= OnPositionStopMove;
     }
 
     private Vector3 GetPositionInputDown()
     {
         return transform.position + _offsetMovement;
-    }
-
-    private void ShootRaycastCheckGridEndMove()
-    {
-        var rayPos = transform.position + _offsetRaycast;
-        Debug.DrawRay(rayPos, new Vector3(rayPos.x, rayPos.y, rayPos.z + 100), Color.yellow);
-        RaycastHit hit;
-        Physics.Raycast(rayPos, new Vector3(rayPos.x, rayPos.y, rayPos.z + 100), out hit, Mathf.Infinity, gridMask);
-        {
-            if (hit.collider != null)
-            {
-                var getHitPos = hit.collider.transform.position;
-                _offsetPosEndMove = new Vector3(getHitPos.x, getHitPos.y, transform.position.z) - rayPos;
-            }
-        }
     }
 
     protected abstract void OnCheckColorBlock();
@@ -103,6 +121,23 @@ public abstract class BaseBlockPuzzle : MonoBehaviour
     {
         if (blockState != BlockState.Move) blockState = BlockState.Move;
         _direction = getDirection;
+    }
+}
+
+[Serializable]
+public class BlockDirection
+{
+    public BlockDirection Up;
+    public BlockDirection Down;
+    public BlockDirection Left;
+    public BlockDirection Right;
+    
+    [Serializable]
+    public struct BlockDirectionInfor
+    {
+        public Direction blockDirection;
+        public int rowLengthToCheck;
+        public int columnLengthToCheck;
     }
 }
 
