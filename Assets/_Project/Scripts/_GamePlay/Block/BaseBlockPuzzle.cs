@@ -1,111 +1,119 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using VirtueSky.Events;
 
 public abstract class BaseBlockPuzzle : MonoBehaviour
 {
-    [SerializeField] private Vector3Event onPositionBlockStopMoveEvent;
-    [SerializeField] private Vector3Event onStopMoveBlockEvent;
-    [SerializeField] private Vector3Event onCheckBlockCollisionGate;
+    [SerializeField] private float raycastCheckGateLength, speedMove = 50f;
+    [SerializeField] private Vector3Event onPositionBlockStopMoveEvent, onStopMoveBlockEvent;
     [SerializeField] private BlockDirection blockDirection;
     [SerializeField] private ColorType colorType;
-    [SerializeField] private float speedMove = 35f;
     [SerializeField] private Rigidbody rigidbody;
-    [SerializeField] private BlockState blockState;
     [SerializeField] private MeshCollider meshCollider;
     [SerializeField] private Mesh gridMesh;
     [SerializeField] private LayerMask gridMask;
-    [SerializeField] private OnCollisionGateEvent onCollisionGateEvent;
-    private Vector3 _direction;
-    private Vector3 _offsetMovement;
-    private Vector3 _offsetPosEndMove;
-    private Vector3 _offPivot;
-    private Vector3 pivot;
+    private Gate _currentGate;
+    private Vector3 _direction, _offPivot, _offsetMovement, _prevPosition;
+    private BlockState blockState;
 
     private void Start()
     {
-        pivot = new Vector3(meshCollider.bounds.min.x+gridMesh.bounds.size.x/2,
-            meshCollider.bounds.min.y+gridMesh.bounds.size.y/2, transform.position.z);
-        Debug.Log(pivot);
-        _offPivot = transform.position - pivot;
+        rigidbody.isKinematic = true;
+        _offPivot = transform.position - (meshCollider.bounds.min + gridMesh.bounds.size / 2);
     }
-
-    public Vector3 GetPivotBlock() => transform.position - _offPivot;
 
     private void FixedUpdate()
     {
-        if (blockState == BlockState.Move)
+        if (blockState != BlockState.Move) return;
+        var moveDirection = _direction - GetPositionInputDown();
+        float remainingDistance = moveDirection.magnitude, maxDistance = speedMove * Time.deltaTime;
+
+        rigidbody.velocity = moveDirection.normalized * (remainingDistance <= maxDistance
+            ? speedMove * Mathf.Clamp01(remainingDistance / maxDistance)
+            : speedMove);
+
+        if (remainingDistance < 0.01f)
         {
-            var moveDirection = _direction - GetPositionInputDown();
-            var remainingDistance = moveDirection.magnitude;
-            var maxDistanceThisFrame = speedMove * Time.deltaTime;
-
-            if (remainingDistance <= maxDistanceThisFrame)
-            {
-                var slowDownFactor = Mathf.Clamp01(remainingDistance / maxDistanceThisFrame);
-                rigidbody.velocity = moveDirection.normalized * (speedMove * slowDownFactor);
-                if (remainingDistance < 0.01f)
-                {
-                    rigidbody.velocity = Vector3.zero;
-                    blockState = BlockState.Stop;
-                }
-            }
-            else
-            {
-                rigidbody.velocity = moveDirection.normalized * speedMove;
-            }
-
-            var rayPos = transform.position + _offPivot;
-            Debug.DrawRay(rayPos, new Vector3(rayPos.x, rayPos.y, rayPos.z + 100), Color.yellow);
+            rigidbody.velocity = Vector3.zero;
+            blockState = BlockState.Stop;
         }
+
+        Debug.DrawRay(transform.position + _offPivot, Vector3.forward * 100, Color.yellow);
     }
 
-    public ColorType GetColorType() => colorType;
-
-    private void OnCollisionEnter(Collision other)
+    private void OnDisable()
     {
-        if (other.gameObject.CompareTag("Gate"))
-        {
-            var gate = other.gameObject.GetComponent<Gate>();
-            if (gate.IsCorrectGate(colorType))
-            {
-                switch (gate.GetGateInformation().gateDirection)
-                {
-                    case Direction.Left:
-                        break;
-                    case Direction.Right:
-                        break;
-                    case Direction.Bottom:
-                        break;
-                    case Direction.Top:
-                        break;
-                }
-            }
-        }
+        onPositionBlockStopMoveEvent.OnRaised -= OnPositionStopMove;
     }
 
-    void OnShootRaycastCheckGate(Vector3 origin, Vector3 direction)
+    private void OnTriggerStay(Collider other)
     {
-        
+        if (!other.CompareTag("Gate") ||
+            Vector3.Distance(_prevPosition, transform.position) < gridMesh.bounds.size.magnitude / 4)
+            return;
+
+        _currentGate = other.GetComponent<Gate>();
+        if (!_currentGate.IsCorrectGate(colorType)) return;
+
+        _prevPosition = transform.position;
+        var countGate = CountValidGateHits(_currentGate.GetGateInformation().gateDirection);
+        if (countGate == _currentGate.GetGateInformation().gateLength) OnActionInGate();
+    }
+
+    private int CountValidGateHits(Direction direction)
+    {
+        var directions = direction switch
+        {
+            Direction.Left => blockDirection.Left,
+            Direction.Right => blockDirection.Right,
+            Direction.Bottom => blockDirection.Down,
+            Direction.Top => blockDirection.Up,
+            _ => null
+        };
+
+        var countGate = 0;
+        foreach (var dir in directions)
+            if (OnShootRaycastCheckGate(dir.rowRaycast, dir.columnRaycast, direction))
+                countGate++;
+        return countGate;
+    }
+
+    private bool OnShootRaycastCheckGate(int row, int column, Direction direction)
+    {
+        var origin = GetPivotBlock() + new Vector3(gridMesh.bounds.size.x * column, gridMesh.bounds.size.y * row, 0);
+        var directionVector = direction switch
+        {
+            Direction.Left => Vector3.left,
+            Direction.Right => Vector3.right,
+            Direction.Bottom => Vector3.down,
+            Direction.Top => Vector3.up,
+            _ => Vector3.zero
+        } * raycastCheckGateLength;
+
+        Debug.DrawRay(origin, directionVector, Color.red);
+        return Physics.Raycast(origin, directionVector, out var hit, Mathf.Infinity) && hit.collider.CompareTag("Gate");
     }
 
     public void OnStartMove(Vector3 startInputPos)
     {
+        rigidbody.isKinematic = false;
         _offsetMovement = startInputPos - transform.position;
         onPositionBlockStopMoveEvent.OnRaised += OnPositionStopMove;
     }
 
     public void OnStopMove()
     {
-        if (blockState != BlockState.Stop) blockState = BlockState.Stop;
-        Debug.Log("dung");
+        rigidbody.isKinematic = true;
+        blockState = BlockState.Stop;
         rigidbody.velocity = Vector3.zero;
-        onStopMoveBlockEvent.Raise(transform.position-_offPivot);
+        onStopMoveBlockEvent.Raise(GetPivotBlock());
     }
 
-    void OnPositionStopMove(Vector3 currentSlotPos)
+    private void OnPositionStopMove(Vector3 currentSlotPos)
     {
-        var offset =new Vector3(currentSlotPos.x,currentSlotPos.y,transform.position.z)- (transform.position - _offPivot);
+        var offset = new Vector3(currentSlotPos.x, currentSlotPos.y, transform.position.z) -
+                     (transform.position - _offPivot);
         transform.position += offset;
         onPositionBlockStopMoveEvent.OnRaised -= OnPositionStopMove;
     }
@@ -115,29 +123,34 @@ public abstract class BaseBlockPuzzle : MonoBehaviour
         return transform.position + _offsetMovement;
     }
 
-    protected abstract void OnCheckColorBlock();
-
-    public void OnUpdaetBlockPos(Vector3 getDirection)
+    public Vector3 GetPivotBlock()
     {
-        if (blockState != BlockState.Move) blockState = BlockState.Move;
+        return transform.position - _offPivot;
+    }
+
+    public ColorType GetColorType()
+    {
+        return colorType;
+    }
+
+    public void OnUpdateBlockPos(Vector3 getDirection)
+    {
+        blockState = BlockState.Move;
         _direction = getDirection;
     }
+
+    protected abstract void OnActionInGate();
 }
 
 [Serializable]
 public class BlockDirection
 {
-    public BlockDirection Up;
-    public BlockDirection Down;
-    public BlockDirection Left;
-    public BlockDirection Right;
-    
+    public List<BlockDirectionInfor> Up, Down, Left, Right;
+
     [Serializable]
     public struct BlockDirectionInfor
     {
-        public Direction blockDirection;
-        public int rowLengthToCheck;
-        public int columnLengthToCheck;
+        public int rowRaycast, columnRaycast;
     }
 }
 

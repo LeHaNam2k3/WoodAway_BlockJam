@@ -1,5 +1,4 @@
 using UnityEngine;
-using VirtueSky.Inspector;
 
 public class GridSlot : MonoBehaviour
 {
@@ -12,14 +11,15 @@ public class GridSlot : MonoBehaviour
     {
         row = getRow;
         column = getColumn;
-        gate.GetCollider().enabled = false;
+        gate.gameObject.SetActive(false);
     }
-    
+
     public void OnSetUpGate(ColorType getColorType, Direction getDirection, int gateLength)
     {
-      gate.InitGate(getColorType,getDirection, gateLength);
+        gate.gameObject.SetActive(true);
+        gate.InitGate(getColorType, getDirection, gateLength);
     }
-    
+
     public (int row, int colum) GetRowAndColumn()
     {
         return (row, column);

@@ -10,8 +10,8 @@ public class TouchController : MonoBehaviour
     [SerializeField] private InputEventTouchEnd inputEventTouchEnd;
     [SerializeField] private InputEventTouchCancel inputEventTouchCancel;
     private BaseBlockPuzzle _currentSelectBlock;
-    private Vector3 _prevPos;
     private float _currentTime;
+    private Vector3 _prevPos;
     private float _prevTime;
 
     private void OnEnable()
@@ -30,23 +30,23 @@ public class TouchController : MonoBehaviour
         inputEventTouchCancel.OnRaised -= OnTouchEnd;
     }
 
-    void OnTouchBegin(Vector3 pos)
+    private void OnTouchBegin(Vector3 pos)
     {
         HandlePoint(pos);
     }
 
-    void OnTouchMove(Vector3 pos)
+    private void OnTouchMove(Vector3 pos)
     {
         if (_currentSelectBlock != null)
         {
             var direction =
                 camera.ScreenToWorldPoint(new Vector3(pos.x, pos.y, Mathf.Abs(camera.transform.position.z)));
-            _currentSelectBlock.OnUpdaetBlockPos(new Vector3(direction.x, direction.y,
+            _currentSelectBlock.OnUpdateBlockPos(new Vector3(direction.x, direction.y,
                 _currentSelectBlock.transform.position.z));
         }
     }
 
-    void OnTouchEnd(Vector3 pos)
+    private void OnTouchEnd(Vector3 pos)
     {
         if (_currentSelectBlock)
         {
@@ -56,14 +56,13 @@ public class TouchController : MonoBehaviour
         }
     }
 
-    void HandlePoint(Vector3 direction)
+    private void HandlePoint(Vector3 direction)
     {
-        Ray ray = camera.ScreenPointToRay(direction);
+        var ray = camera.ScreenPointToRay(direction);
         Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);
         RaycastHit raycastHit;
         Physics.Raycast(ray.origin, ray.direction, out raycastHit, Mathf.Infinity);
         if (raycastHit.collider != null)
-        {
             if (raycastHit.collider.gameObject.CompareTag("Block"))
             {
                 _currentSelectBlock = raycastHit.collider.GetComponent<BaseBlockPuzzle>();
@@ -71,8 +70,6 @@ public class TouchController : MonoBehaviour
                     Mathf.Abs(camera.transform.position.z)));
                 _currentSelectBlock.OnStartMove(new Vector3(pos.x, pos.y, _currentSelectBlock.transform.position.z));
                 _prevPos = direction;
-
             }
-        }
     }
 }

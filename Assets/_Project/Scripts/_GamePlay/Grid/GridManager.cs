@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using VirtueSky.Events;
@@ -14,9 +13,9 @@ public class GridManager : MonoBehaviour
 
     [HeaderLine("Properties")] [SerializeField]
     private int columns;
+
     [SerializeField] private int rows;
     [SerializeField] private Transform containGridSlot;
-    [SerializeField] private OnCollisionGateEvent onCollisionGateEvent;
     [SerializeField] private Vector3Event onStopMoveBlockEvent;
     [SerializeField] private Vector3Event onPositionBlockStopMoveEvent;
 
@@ -26,7 +25,7 @@ public class GridManager : MonoBehaviour
     [HeaderLine("Gate Setup")] [SerializeField]
     private List<SetupGate> setupGates;
 
-    [SerializeField] List<GridSlot> _gridSlots = new List<GridSlot>();
+    [SerializeField] private List<GridSlot> _gridSlots = new();
 
     private void OnEnable()
     {
@@ -44,56 +43,34 @@ public class GridManager : MonoBehaviour
             containGridSlot.position.y + gridSlot.GetSizeGrid().y * row, 0);
     }
 
-    void OnCheckBlockStopMoveEvent(Vector3 blockPivot)
+    private void OnCheckBlockStopMoveEvent(Vector3 blockPivot)
     {
-        onPositionBlockStopMoveEvent.Raise(_gridSlots[GetGridSlotIndex(blockPivot).getRowGridSlot*rows+GetGridSlotIndex(blockPivot).getColumnSlot].transform.position);
+        onPositionBlockStopMoveEvent.Raise(
+            _gridSlots[GetGridSlotIndex(blockPivot).getRowGridSlot * rows + GetGridSlotIndex(blockPivot).getColumnSlot]
+                .transform.position);
     }
 
-    (int getRowGridSlot, int getColumnSlot) GetGridSlotIndex(Vector3 blockPivot)
+    private (int getRowGridSlot, int getColumnSlot) GetGridSlotIndex(Vector3 blockPivot)
     {
-        Vector2 gridSize = gridSlot.GetSizeGrid();
+        var gridSize = gridSlot.GetSizeGrid();
         Vector2 firstSlotPos = _gridSlots[0].transform.position;
-        Vector2 offset = firstSlotPos - gridSize / 2;
-        int rowIndex = Mathf.FloorToInt((blockPivot.y - offset.y) / gridSize.y);
-        int columnIndex = Mathf.FloorToInt((blockPivot.x - offset.x) / gridSize.x);
+        var offset = firstSlotPos - gridSize / 2;
+        var rowIndex = Mathf.FloorToInt((blockPivot.y - offset.y) / gridSize.y);
+        var columnIndex = Mathf.FloorToInt((blockPivot.x - offset.x) / gridSize.x);
         return (rowIndex, columnIndex);
     }
 
-    private void OnCheckGate(Tuple<BaseBlockPuzzle,GridSlot, BlockDirection> blockInfor)
-    {
-        //blockInfor.Item1.GetPivotBlock()
-        var validGate = setupGates
-            .FirstOrDefault(gate => gate.GateInfors
-                .Any(c => c.row == blockInfor.Item2.GetRowAndColumn().row 
-                          && c.column == blockInfor.Item2.GetRowAndColumn().colum));
-        GridSlot currentGrid =
-            _gridSlots[GetGridSlotIndex(blockInfor.Item1.GetPivotBlock()).getRowGridSlot * rows + GetGridSlotIndex(blockInfor.Item1.GetPivotBlock()).getColumnSlot];
-        switch (validGate.direction)
-        {
-            case Direction.Left:
-                
-                break;
-            case Direction.Right:
-                
-                break;
-            case Direction.Top:
-                
-                break;
-            case Direction.Bottom:
-                    
-                break;
-        }
-    }
 
     [Button]
     private void OnSpawnGrid()
     {
         containGridSlot.ClearTransform();
+        _gridSlots.Clear();
         for (var i = 0; i < rows; i++)
         for (var j = 0; j < columns; j++)
         {
             var slot = PrefabUtility.InstantiatePrefab(gridSlot, containGridSlot) as GridSlot;
-            slot.Init(i,j);
+            slot.Init(i, j);
             _gridSlots.Add(slot);
             SetPositionOnGrid(slot.transform, j, i);
         }
@@ -112,7 +89,8 @@ public class GridManager : MonoBehaviour
     {
         foreach (var gate in setupGates)
         foreach (var grid in gate.GateInfors)
-            _gridSlots[grid.row*rows+ grid.column].OnSetUpGate(gate.ColorType, gate.direction,gate.GateInfors.Count);
+            _gridSlots[grid.row * rows + grid.column]
+                .OnSetUpGate(gate.ColorType, gate.direction, gate.GateInfors.Count);
     }
 }
 
